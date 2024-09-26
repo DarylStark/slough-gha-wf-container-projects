@@ -1,0 +1,52 @@
+---
+on:
+  workflow_call:
+    inputs:
+      container-file:
+        description: "The containerfile"
+        type: string
+        required: false
+        default: "src/Dockerfile"
+      container-tags:
+        description: "The tags for the container"
+        type: string
+        required: false
+        default: "latest"
+      platforms:
+        description: "The platforms to build for"
+        type: string
+        required: false
+        default: "linux/arm64,linux/amd64"
+    secrets:
+      DOCKER_USERNAME:
+        description: "Docker Hub username."
+        required: false
+      DOCKER_PASSWORD:
+        description: "Docker Hub password. This should be a PAT."
+        required: false
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          platforms: ${{ inputs.platforms }}
+          file: ${{ inputs.container-file }}
+          tags: ${{ inputs.container-tags }}

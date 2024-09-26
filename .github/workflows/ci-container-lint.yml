@@ -1,0 +1,20 @@
+---
+on:
+  workflow_call:
+    inputs:
+      container-file:
+        type: string
+        required: false
+        default: src/Dockerfile
+        description: "The container file to lint."
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Lint with hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ inputs.container-file }}
