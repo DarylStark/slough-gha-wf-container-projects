@@ -39,6 +39,7 @@ The following inputs are available for this workflow:
 
 -   `container-tags`: *required*: the tags for this container
 -   `container-file`: *not required*: the location for the containerfile, relative to the project root. By default, this is `src/Dockerfile`
+-   `container-context`: *not required*: the location for the context of the build. By default, this is `src/`
 -   `platforms`: *not required*: the platforms for which to build this container in a comma seperated list. By default, this is `linux/arm64,linux/amd64`
 
 The following secrets should be set for this workflow:
