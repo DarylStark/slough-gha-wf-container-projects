@@ -1,0 +1,38 @@
+---
+on:
+  workflow_call:
+    inputs:
+      container-file:
+        description: "The containerfile"
+        type: string
+        required: false
+        default: "src/Dockerfile"
+      container-tags:
+        description: "The tags for the container"
+        type: string
+        required: false
+        default: "latest"
+      platforms:
+        description: "The platforms to build for"
+        type: string
+        required: false
+        default: "linux/arm64,linux/amd64"
+    secrets:
+      DOCKER_USERNAME:
+        description: "Docker Hub username."
+        required: false
+      DOCKER_PASSWORD:
+        description: "Docker Hub password. This should be a PAT."
+        required: false
+
+jobs:
+  cd-deploy:
+    name: Deploy container image
+    uses: ./.github/workflows/cd-container-publish.yml
+    with:
+      container-file: ${{ inputs.container-file }}
+      container-tags: ${{ inputs.container-tags }}
+      platforms: ${{ inputs.platforms }}
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
