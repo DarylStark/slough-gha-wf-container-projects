@@ -7,11 +7,15 @@ on:
         type: string
         required: false
         default: "src/Dockerfile"
+      container-context:
+        description: "The context folder for the containerfile"
+        type: string
+        required: false
+        default: "src/"
       container-tags:
         description: "The tags for the container"
         type: string
-        required: false
-        default: "latest"
+        required: true
       platforms:
         description: "The platforms to build for"
         type: string
@@ -45,7 +49,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ${{ inputs.container-context }}
           push: true
           platforms: ${{ inputs.platforms }}
           file: ${{ inputs.container-file }}

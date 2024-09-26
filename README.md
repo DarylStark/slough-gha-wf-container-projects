@@ -28,6 +28,8 @@ jobs:
   cd:
     name: CD
     uses: DarylStark/slough-gha-wf-container-projects/.github/workflows/cd-container.yml@main
+    with:
+      container-tags: my-container:latest
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -35,8 +37,9 @@ jobs:
 
 The following inputs are available for this workflow:
 
+-   `container-tags`: *required*: the tags for this container
 -   `container-file`: *not required*: the location for the containerfile, relative to the project root. By default, this is `src/Dockerfile`
--   `container-tags`: *not required*: the tags for this container
+-   `container-context`: *not required*: the location for the context of the build. By default, this is `src/`
 -   `platforms`: *not required*: the platforms for which to build this container in a comma seperated list. By default, this is `linux/arm64,linux/amd64`
 
 The following secrets should be set for this workflow:
