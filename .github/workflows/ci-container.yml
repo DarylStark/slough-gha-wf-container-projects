@@ -1,8 +1,16 @@
 ---
 on:
   workflow_call:
+    inputs:
+      container-file:
+        type: string
+        required: false
+        default: src/Dockerfile
+        description: "The container file to lint."
 
 jobs:
   lint:
     name: Lint container file
     uses: ./.github/workflows/ci-container-lint.yml
+    with:
+      container-file: ${{ inputs.container-file }}
