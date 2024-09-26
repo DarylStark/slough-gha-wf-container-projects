@@ -10,8 +10,7 @@ on:
       container-tags:
         description: "The tags for the container"
         type: string
-        required: false
-        default: "latest"
+        required: true
       platforms:
         description: "The platforms to build for"
         type: string
