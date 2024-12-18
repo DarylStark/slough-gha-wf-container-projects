@@ -50,6 +50,7 @@ jobs:
   cd:
     name: Container CD
     uses: ./.github/workflows/cd.yml
+    needs: ci
     if: ${{ inputs.enable_cd }}
     with:
       container-file: ${{ inputs.container-file }}
