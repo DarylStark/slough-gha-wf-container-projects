@@ -2,12 +2,12 @@
 on:
   workflow_call:
     inputs:
-      enable_ci:
+      enable-ci:
         description: Enable or disable CI
         type: boolean
         required: false
         default: true
-      enable_cd:
+      enable-cd:
         description: Enable or disable CD
         type: boolean
         required: false
@@ -44,14 +44,14 @@ jobs:
   ci:
     name: Container CI
     uses: ./.github/workflows/ci.yml
-    if: ${{ inputs.enable_ci }}
+    if: ${{ inputs.enable-ci }}
     with:
       container-file: ${{ inputs.container-file }}
   cd:
     name: Container CD
     uses: ./.github/workflows/cd.yml
     needs: ci
-    if: ${{ inputs.enable_cd }}
+    if: ${{ inputs.enable-cd }}
     with:
       container-file: ${{ inputs.container-file }}
       container-context: ${{ inputs.container-context }}
