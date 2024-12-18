@@ -1,0 +1,61 @@
+---
+on:
+  workflow_call:
+    inputs:
+      enable_ci:
+        description: Enable or disable CI
+        type: boolean
+        required: false
+        default: true
+      enable_cd:
+        description: Enable or disable CD
+        type: boolean
+        required: false
+        default: true
+      container-file:
+        description: "The containerfile"
+        type: string
+        required: false
+        default: "src/Dockerfile"
+      container-context:
+        description: "The context folder for the containerfile"
+        type: string
+        required: false
+        default: "src/"
+      container-tags:
+        description: "The tags for the container"
+        type: string
+        required: false
+        default: "latest"
+      platforms:
+        description: "The platforms to build for"
+        type: string
+        required: false
+        default: "linux/arm64,linux/amd64"
+    secrets:
+      DOCKER_USERNAME:
+        description: "Docker Hub username."
+        required: false
+      DOCKER_PASSWORD:
+        description: "Docker Hub password. This should be a PAT."
+        required: false
+
+jobs:
+  ci:
+    name: Container CI
+    uses: ./.github/workflows/ci.yml
+    if: ${{ inputs.enable_ci }}
+    with:
+      container-file: ${{ inputs.container-file }}
+  cd:
+    name: Container CD
+    uses: ./.github/workflows/cd.yml
+    if: ${{ inputs.enable_cd }}
+    with:
+      container-file: ${{ inputs.container-file }}
+      container-context: ${{ inputs.container-context }}
+      container-tags: ${{ inputs.container-tags }}
+      platforms: ${{ inputs.platforms }}
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
