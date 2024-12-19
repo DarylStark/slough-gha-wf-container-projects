@@ -22,16 +22,24 @@ on:
         type: string
         required: false
         default: "src/"
-      container-tags:
-        description: "The tags for the container"
-        type: string
-        required: false
-        default: "latest"
       platforms:
         description: "The platforms to build for"
         type: string
         required: false
         default: "linux/arm64,linux/amd64"
+      container-repository:
+        type: string
+        description: "The name for the repository for the container."
+        required: true
+      container-name:
+        type: string
+        description: "The name for the container. Defaults to the reponame."
+        required: false
+        default: ""
+      version:
+        type: string
+        description: "The version of the software. Used for a tag."
+        required: false
     secrets:
       DOCKER_USERNAME:
         description: "Docker Hub username."
@@ -55,8 +63,10 @@ jobs:
     with:
       container-file: ${{ inputs.container-file }}
       container-context: ${{ inputs.container-context }}
-      container-tags: ${{ inputs.container-tags }}
       platforms: ${{ inputs.platforms }}
+      container-repository: ${{ inputs.container-repository }}
+      container-name: ${{ inputs.container-name }}
+      version: ${{ inputs.version }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
