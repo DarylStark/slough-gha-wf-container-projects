@@ -1,4 +1,5 @@
 ---
+name: Slough - Container Projects
 on:
   workflow_call:
     inputs:
@@ -55,6 +56,7 @@ jobs:
     if: ${{ inputs.enable-ci }}
     with:
       container-file: ${{ inputs.container-file }}
+
   cd:
     name: Container CD
     uses: ./.github/workflows/cd.yml
