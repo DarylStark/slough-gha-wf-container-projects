@@ -1,0 +1,74 @@
+---
+name: Slough - Container Projects
+on:
+  workflow_call:
+    inputs:
+      enable-ci:
+        description: Enable or disable CI
+        type: boolean
+        required: false
+        default: true
+      enable-cd:
+        description: Enable or disable CD
+        type: boolean
+        required: false
+        default: true
+      container-file:
+        description: "The containerfile"
+        type: string
+        required: false
+        default: "src/Dockerfile"
+      container-context:
+        description: "The context folder for the containerfile"
+        type: string
+        required: false
+        default: "src/"
+      platforms:
+        description: "The platforms to build for"
+        type: string
+        required: false
+        default: "linux/arm64,linux/amd64"
+      container-repository:
+        type: string
+        description: "The name for the repository for the container."
+        required: true
+      container-name:
+        type: string
+        description: "The name for the container. Defaults to the reponame."
+        required: false
+        default: ""
+      version:
+        type: string
+        description: "The version of the software. Used for a tag."
+        required: false
+    secrets:
+      DOCKER_USERNAME:
+        description: "Docker Hub username."
+        required: false
+      DOCKER_PASSWORD:
+        description: "Docker Hub password. This should be a PAT."
+        required: false
+
+jobs:
+  ci:
+    name: Container CI
+    uses: ./.github/workflows/ci.yml
+    if: ${{ inputs.enable-ci }}
+    with:
+      container-file: ${{ inputs.container-file }}
+
+  cd:
+    name: Container CD
+    uses: ./.github/workflows/cd.yml
+    needs: ci
+    if: ${{ inputs.enable-cd }}
+    with:
+      container-file: ${{ inputs.container-file }}
+      container-context: ${{ inputs.container-context }}
+      platforms: ${{ inputs.platforms }}
+      container-repository: ${{ inputs.container-repository }}
+      container-name: ${{ inputs.container-name }}
+      version: ${{ inputs.version }}
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
